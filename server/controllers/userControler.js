@@ -80,7 +80,7 @@ const getFriendList = (req, res) => {
           message:
             list.friends.length > 0
               ? "Get friends list successfully"
-              : "No friends were found",
+              : "No friends found",
           success: true,
           data: list.friends,
           length: list.friends.length,
@@ -289,7 +289,7 @@ const getUsersList = async (req, res) => {
       return res.status(200).json({
         data: users,
         status: 200,
-        message: "Get users succesfully",
+        message: users.length > 0 ? "Get users succesfully" : "Users not found",
         length: users.length,
       });
     } else {
@@ -299,7 +299,7 @@ const getUsersList = async (req, res) => {
       return res.status(200).json({
         data: users,
         status: 200,
-        message: "Get users succesfully",
+        message: users.length > 0 ? "Get users succesfully" : "Users not found",
         length: users.length,
       });
     }

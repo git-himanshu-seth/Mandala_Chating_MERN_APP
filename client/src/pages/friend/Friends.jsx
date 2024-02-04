@@ -42,7 +42,7 @@ const Friends = () => {
     };
     dispatch(friendActions.acceptReq(sendData));
   };
-  
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom color={"#1976d2"}>
@@ -69,33 +69,35 @@ const Friends = () => {
                         sx={{ width: "33%" }}
                       />
                     </>
-                    {userData &&
-                      friend?.status === "pending" &&
-                      friend?.requester !== `${userData?._id}` && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            onClick={() =>
-                              handleAcceptRequest("accept", friend?._id)
-                            }
-                            sx={{ marginRight: "20px" }}
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            onClick={() =>
-                              handleAcceptRequest("reject", friend?._id)
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </>
-                      )}
+                    <ListItemText sx={{ width: "33%" }}>
+                      {userData &&
+                        friend?.status === "pending" &&
+                        friend?.requester !== `${userData?._id}` && (
+                          <>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              onClick={() =>
+                                handleAcceptRequest("accept", friend?._id)
+                              }
+                              sx={{ marginRight: "20px" }}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              size="small"
+                              onClick={() =>
+                                handleAcceptRequest("reject", friend?._id)
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                    </ListItemText>
                   </ListItem>
                   <Divider />
                 </React.Fragment>

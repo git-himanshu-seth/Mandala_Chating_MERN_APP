@@ -79,47 +79,85 @@ const ChatBox = ({ chatId, oldMessages }) => {
           overflowX: "hidden",
         }}
       >
-        {messages.map((message, index) => {
-          const userImage = userData?.imageUrl ? userData?.imageUrl : user;
-          const senderImage = message?.message?.imageUrl
-            ? message?.message?.imageUrl
-            : user;
-          const date = new Date(message?.message?.timestamp);
-          const time = `${date.getHours()}:${date.getMinutes()}`;
-          return (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                flexDirection:
-                  message?.message?.sender?.name === userData.name
-                    ? "row-reverse"
-                    : "row",
-                alignItems: "flex-end",
-              }}
-            >
-              <img
-                src={
-                  message?.message?.sender?.name !== userData.name
-                    ? senderImage
-                    : userImage
-                }
-                alt="User"
+        {messages &&
+          messages?.length > 0 &&
+          messages?.map((message, index) => {
+            const userImage = userData?.imageUrl ? userData?.imageUrl : user;
+            const senderImage = message?.message?.imageUrl
+              ? message?.message?.imageUrl
+              : user;
+            const date = new Date(message?.message?.timestamp);
+            const time = `${date.getHours()}:${date.getMinutes()}`;
+            return (
+              <div
+                key={index}
                 style={{
-                  width: "30px",
-                  height: "30px",
-                  borderRadius: "50%",
-                  marginRight: "20px",
-                  marginLeft: "8px",
+                  display: "flex",
+                  flexDirection:
+                    message?.message?.sender?.name === userData.name
+                      ? "row-reverse"
+                      : "row",
+                  alignItems: "flex-end",
                 }}
-              />
-              <div style={{ maxWidth: "70%" }}>
-                <div>{message?.message?.content}</div>
-                <div style={{ fontSize: "10px", color: "#888" }}>{time}</div>
+              >
+                <img
+                  src={
+                    message?.message?.sender?.name !== userData.name
+                      ? senderImage
+                      : userImage
+                  }
+                  alt="User"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "50%",
+                    marginRight: "20px",
+                    marginLeft: "8px",
+                  }}
+                />
+                <div
+                  style={{
+                    maxWidth: "70%",
+                    background:
+                      message?.message?.sender?.name !== userData.name
+                        ? " #1976d2"
+                        : "white",
+                    color:
+                      message?.message?.sender?.name !== userData.name
+                        ? "white"
+                        : "#1976d2",
+                    padding: "2px 8px 3px 7px",
+                    borderRadius: "15px",
+                    border:
+                      message?.message?.sender?.name !== userData.name
+                        ? " solid 3px white"
+                        : " solid 3px #1976d2",
+                    marginTop: "4px",
+                  }}
+                >
+                  <div
+                    style={{
+                      borderRadius: "30px",
+                      border: "2px sloid 31976d2",
+                    }}
+                  >
+                    {message?.message?.content}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "10px",
+                      color:
+                        message?.message?.sender?.name !== userData.name
+                          ? "#ffff"
+                          : "#1976d2",
+                    }}
+                  >
+                    {time}
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <div
         style={{

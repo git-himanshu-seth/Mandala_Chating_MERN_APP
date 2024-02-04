@@ -5,7 +5,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
-import firebaseAuthManager from "../utilis/services/firebase";
+import firebaseAuthManager from "../_utilities/services/firebase";
 import googleLogo from "../_assets/images/googleLogo.svg";
 import { useDispatch } from "react-redux";
 import { authActions } from "../_actions";

@@ -7,10 +7,8 @@ import {
   onAuthStateChanged,
 } from "@firebase/auth";
 import firebaseConfig from "./firebaseConfig";
-import { UseDispatch } from "react-redux";
 class FirebaseAuthManager {
   constructor() {
-    // Initialize Firebase
     this.app = initializeApp(firebaseConfig);
     this.auth = getAuth(this.app);
     // Variable to store user data

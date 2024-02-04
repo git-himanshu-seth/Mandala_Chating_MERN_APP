@@ -62,7 +62,6 @@ const sendMessage = async (req, res) => {
     const { user, chatId, message, recive } = req.body;
     if (chatId) {
       const existingChat = await UserChat.findOne({ chat_id: chatId });
-
       const newMessage = {
         content: message,
         timestamp: Date.now(),
@@ -78,35 +77,12 @@ const sendMessage = async (req, res) => {
         existingChat.messages = [{ message: newMessage }];
       }
       await existingChat.save();
-
       res.status(200).json({
         message: "Message sent successfully",
         status: 200,
         data: newMessage,
       });
     }
-    // else {
-    //   newChat = new UserChat({
-    //     user,
-    //     sender: recive,
-    //     chat_id: objectId,
-    //     messages: [
-    //       {
-    //         message: {
-    //           content: message,
-    //           sender: user,
-    //           timestamp: Date.now(),
-    //         },
-    //       },
-    //     ],
-    //   });
-    //   await newChat.save();
-    //   return res.status(200).json({
-    //     message: "Message sent successfully",
-    //     status: 200,
-    //     data: { new_chat_id: newChat._id },
-    //   });
-    // }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

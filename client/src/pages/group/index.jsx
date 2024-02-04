@@ -20,6 +20,7 @@ import GroupChat from "./GroupChat";
 import { useDispatch, useSelector } from "react-redux";
 import { groupActions, friendActions } from "../../_actions";
 import Loader from "../../components/customLoader";
+import { alert } from "../../_utilities";
 
 const Groups = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,11 @@ const Groups = () => {
   const [groupId, setGroupId] = useState("");
   const [messages, setMessages] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(-1);
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    member: "",
+  });
 
   useEffect(() => {
     if (userData?._id) {
@@ -76,14 +82,16 @@ const Groups = () => {
     }
   }, [acceptRejectReq]);
 
-  const handleCreateGroup = () => {
+  const handleCreateGroup = (e) => {
+    e.preventDefault();
     const groupMember = [];
     if (members.length > 0) {
       for (const member of members) {
         groupMember.push({ user: member });
       }
     }
-    if (groupMember.length > 0 && newGroupName && newGroupDescription) {
+    const formValid = validateForm();
+    if (formValid) {
       const newGroup = {
         name: newGroupName,
         userId: userData?._id,
@@ -91,7 +99,32 @@ const Groups = () => {
         members: groupMember,
       };
       dispatch(groupActions.createGroup(newGroup));
+    } else {
+      alert.error("form validation failed");
     }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { title: "", description: "", member: "" };
+
+    if (newGroupName.trim() === "") {
+      newErrors.title = "Group title is required";
+      valid = false;
+    }
+
+    if (newGroupDescription.trim() === "") {
+      newErrors.description = "Group description is required";
+      valid = false;
+    }
+
+    if (members.length === 0) {
+      newErrors.member = "Plaese add group members";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const addUsers = (checked, id) => {
@@ -196,7 +229,6 @@ const Groups = () => {
                             onClick={() => {
                               setChatSectionOpen(true);
                               setGroupId(`${group._id}`);
-                              console.log(group._id);
                               setMessages(group.messages);
                               setSelectedGroup(index);
                             }}
@@ -265,7 +297,7 @@ const Groups = () => {
                       ))}
                   </List>
                 </Box>
-                {chatSectionOpen && (
+                {chatSectionOpen && selectedGroup !== -1 && (
                   <Box width="70%">
                     <GroupChat groupId={groupId} oldMessages={messages} />
                   </Box>
@@ -290,6 +322,7 @@ const Groups = () => {
                 value={newGroupName}
                 onChange={(e) => setNewGroupName(e.target.value)}
               />
+              <Typography color="error">{errors.title}</Typography>
               <TextField
                 margin="dense"
                 label="Group Description"
@@ -299,6 +332,7 @@ const Groups = () => {
                 value={newGroupDescription}
                 onChange={(e) => setNewGroupDescription(e.target.value)}
               />
+              <Typography color="error">{errors.description}</Typography>
               {/* userList maping here*/}
               <Box
                 sx={{
@@ -338,6 +372,7 @@ const Groups = () => {
                     );
                   })}
               </Box>
+              <Typography color="error">{errors.member}</Typography>
             </DialogContent>
             <DialogActions>
               <Button

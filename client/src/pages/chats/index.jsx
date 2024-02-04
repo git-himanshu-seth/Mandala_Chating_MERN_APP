@@ -20,7 +20,7 @@ const Chats = () => {
     return state?.auth?.user;
   });
   const chatData = useSelector((state) => state?.friend?.messages);
-
+  console.log("chat", chatData);
   const friendList = useSelector((state) => {
     return state?.friend?.friends;
   });
@@ -29,6 +29,7 @@ const Chats = () => {
   const isLoading = useSelector((state) => state.loader.isLoading);
   const [chatId, setChatId] = useState("");
   const [messages, setMessages] = useState([]);
+  const [selectedFriend, setSelectedFriend] = useState(-1);
 
   useEffect(() => {
     if (userData?._id) {
@@ -63,16 +64,38 @@ const Chats = () => {
                 >
                   {friendList &&
                     friendList?.length > 0 &&
-                    friendList?.map((friend) => {
-                      console.log(friend);
+                    // eslint-disable-next-line array-callback-return
+                    friendList?.map((friend, index) => {
                       if (friend.status === "accept") {
                         return (
-                          <React.Fragment key={friend._id}>
+                          // <React.Fragment key={friend._id}>
+                          <Box
+                            key={friend._id}
+                            sx={{
+                              width: "90%",
+                              alignSelf: "center",
+                              marginLeft: "20px",
+                            }}
+                          >
                             <ListItem
                               alignItems="flex-start"
+                              sx={{
+                                background:
+                                  index === selectedFriend
+                                    ? "#1976d2"
+                                    : "white",
+                                color:
+                                  index === selectedFriend
+                                    ? "white "
+                                    : "#1976d2",
+                                borderRadius: "40px",
+                                border: "solid 3px  #1976d2",
+                                marginTop: "10px",
+                              }}
                               onClick={() => {
                                 setChatSectionOpen(true);
                                 setChatId(`${friend._id}`);
+                                setSelectedFriend(index);
                                 dispatch(
                                   friendActions.getMessages({
                                     receiverId: friend.user._id,
@@ -94,14 +117,15 @@ const Chats = () => {
                                 sx={{ alignSelf: "center" }}
                               />
                             </ListItem>
-                            <Divider variant="fullWidth" />
-                          </React.Fragment>
+                            {/* <Divider variant="fullWidth" />
+                          </React.Fragment> */}
+                          </Box>
                         );
                       }
                     })}
                 </List>
               </Box>
-              {chatSectionOpen && (
+              {chatSectionOpen && selectedFriend !== -1 && (
                 <Box width="70%">
                   <ChatBox
                     chatId={chatData?.chat_id}

@@ -21,6 +21,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from "@mui/icons-material/Share";
 import Loader from "../../components/customLoader";
+import { alert } from "../../_utilities";
 
 const Posts = (props) => {
   const dispatch = useDispatch();
@@ -32,6 +33,10 @@ const Posts = (props) => {
   const createPostRes = useSelector((state) => state?.post?.create_post_res);
   const likePostRes = useSelector((state) => state?.post?.update_post_res);
   const isLoading = useSelector((state) => state.loader.isLoading);
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+  });
 
   useEffect(() => {
     dispatch(postActions.getPosts({ id: userData?._id }));
@@ -57,15 +62,39 @@ const Posts = (props) => {
     setDialogOpen(false);
   };
 
-  const handleCreatePost = async () => {
-    if (newPosttitle && newPostDescription) {
+  const handleCreatePost = async (e) => {
+    e.preventDefault();
+
+    const formValid = validateForm();
+
+    if (formValid) {
       const postData = {
         title: newPosttitle,
         content: newPostDescription,
         user: userData?._id,
       };
       dispatch(postActions.createPost(postData));
+    } else {
+      alert.error("form validation failed");
     }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { title: "", description: "" };
+
+    if (newPosttitle.trim() === "") {
+      newErrors.title = "Title is required";
+      valid = false;
+    }
+
+    if (newPostDescription.trim() === "") {
+      newErrors.description = "Description is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const likePost = (id) => {
@@ -157,6 +186,7 @@ const Posts = (props) => {
                 onChange={(e) => setNewPostTitle(e.target.value)}
                 sx={{ marginTop: "15px" }}
               />
+              {/* <Typography color="error">{errors.title}</Typography> */}
               <TextField
                 sx={{ marginTop: "15px" }}
                 label="Post Discreption"
@@ -167,6 +197,7 @@ const Posts = (props) => {
                 value={newPostDescription}
                 onChange={(e) => setNewPostDescription(e.target.value)}
               />
+              {/* <Typography color="error">{errors.description}</Typography> */}
               <Button
                 variant="contained"
                 color="primary"

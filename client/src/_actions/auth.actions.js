@@ -38,6 +38,7 @@ function createUser(data) {
                 );
               }
             });
+          alert.success("User created successfully");
         } else {
           dispatch(
             dispatchFunction({
@@ -86,7 +87,7 @@ function login(data) {
               data: response,
             })
           );
-          alert.error(response.message);
+          alert.error(response.errorMessage);
         }
       },
       (error) => {

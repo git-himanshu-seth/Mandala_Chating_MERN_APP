@@ -37,7 +37,7 @@ const getAllPosts = async (req, res) => {
         data: posts,
         status: 200,
         length: posts.length,
-        message: "Success",
+        message: posts.length > 0 ? "Success" : "Posts not found",
       });
     } else {
       res.status(200).json({

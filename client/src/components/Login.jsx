@@ -8,16 +8,20 @@ import {
   IconButton,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { loginWithEmailAndPassword } from "../utilis/services/firebase";
-import firebaseAuthManager from "../utilis/services/firebase";
-import { UseDispatch, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../_actions/auth.actions";
 import { useNavigate } from "react-router-dom";
+import { alert } from "../_utilities";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
     email: "",
     password: "",
   });
@@ -40,9 +44,37 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { email: "", password: "" };
+
+    if (formData.email.trim() === "") {
+      newErrors.email = "Email is required";
+      valid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+      valid = false;
+    }
+
+    if (formData.password.trim() === "") {
+      newErrors.password = "Password is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(authActions.login(formData));
+
+    const formValid = validateForm();
+
+    if (formValid) {
+      dispatch(authActions.login(formData));
+    } else {
+      alert.error("form validation failed");
+    }
   };
 
   return (
@@ -60,7 +92,7 @@ const Login = () => {
         <TextField
           variant="outlined"
           sx={{ input: { color: "#1976d2" } }}
-          required
+          // required
           fullWidth
           type="email"
           name="email"
@@ -70,6 +102,7 @@ const Login = () => {
           autoComplete="off"
           te
         />
+        <Typography color="error">{errors.email}</Typography>
         <InputLabel
           htmlFor="password"
           style={{ marginTop: "10px", color: "#1976d2" }}
@@ -78,7 +111,7 @@ const Login = () => {
         </InputLabel>
         <TextField
           variant="outlined"
-          required
+          // required
           sx={{ input: { color: "#1976d2" } }}
           fullWidth
           type={showPassword ? "text" : "password"}
@@ -103,6 +136,7 @@ const Login = () => {
           }}
           inputRef={passwordRef}
         />
+        <Typography color="error">{errors.password}</Typography>
         <Button
           type="submit"
           fullWidth
