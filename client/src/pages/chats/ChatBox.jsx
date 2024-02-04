@@ -49,7 +49,7 @@ const ChatBox = ({ chatId, oldMessages }) => {
         friendActions.sendMessage({
           message: newMessage.trim(),
           user: userData?._id,
-          chatId: "65bf073103a9e2377affb2a1",
+          chatId: chatId,
         })
       );
       setMessages([...messages, { message: data }]);

@@ -61,27 +61,27 @@ const sendMessage = async (req, res) => {
   try {
     const { user, chatId, message, recive } = req.body;
     if (chatId) {
-      const existingChat = await UserChat.findOne({ chat_id: chatId });
       const newMessage = {
         content: message,
         timestamp: Date.now(),
         sender: user,
       };
-      if (
-        existingChat &&
-        existingChat?.messages &&
-        existingChat?.messages?.length > 0
-      ) {
-        existingChat.messages.push({ message: newMessage });
-      } else {
-        existingChat.messages = [{ message: newMessage }];
-      }
-      await existingChat.save();
-      res.status(200).json({
-        message: "Message sent successfully",
-        status: 200,
-        data: newMessage,
-      });
+      UserChat.findOneAndUpdate(
+        { chat_id: chatId },
+        { $push: { messages: { message: newMessage } } },
+        { new: true }
+      )
+        .then((result) => {
+          res.status(200).json({
+            message: "Message sent successfully",
+            status: 200,
+          });
+        })
+        .catch((e) => {
+          return res
+            .status(500)
+            .json({ status: 500, success: "falied", message: e.message });
+        });
     }
   } catch (error) {
     console.error(error);
@@ -90,9 +90,9 @@ const sendMessage = async (req, res) => {
 };
 
 const getChats = async (req, res) => {
+  const { sender, user } = req.params;
+  const objectId = new mongoose.Types.ObjectId();
   try {
-    const { sender, user } = req.params;
-    const objectId = new mongoose.Types.ObjectId();
     const chat = await UserChat.findOne({
       $or: [
         { sender: sender, user: user },
@@ -112,9 +112,10 @@ const getChats = async (req, res) => {
       newChat = new UserChat({
         user,
         sender,
-        chat_id: objectId,
+        chat_id: `${objectId}`,
         messages: [],
       });
+
       let chat = await newChat.save();
       return res.status(200).json({
         message: `Chat retrive successfully with ${chat.messages.length} messages`,

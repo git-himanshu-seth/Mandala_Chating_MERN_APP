@@ -186,7 +186,7 @@ const Posts = (props) => {
                 onChange={(e) => setNewPostTitle(e.target.value)}
                 sx={{ marginTop: "15px" }}
               />
-              {/* <Typography color="error">{errors.title}</Typography> */}
+              <div style={{ color: "red" }}>{errors.title}</div>
               <TextField
                 sx={{ marginTop: "15px" }}
                 label="Post Discreption"
@@ -197,7 +197,7 @@ const Posts = (props) => {
                 value={newPostDescription}
                 onChange={(e) => setNewPostDescription(e.target.value)}
               />
-              {/* <Typography color="error">{errors.description}</Typography> */}
+              <div style={{ color: "red" }}>{errors.description}</div>
               <Button
                 variant="contained"
                 color="primary"

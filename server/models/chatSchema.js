@@ -21,7 +21,6 @@ const userChatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    unique: true,
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,

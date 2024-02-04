@@ -322,7 +322,7 @@ const Groups = () => {
                 value={newGroupName}
                 onChange={(e) => setNewGroupName(e.target.value)}
               />
-              <Typography color="error">{errors.title}</Typography>
+              <div style={{ color: "red" }}>{errors.title}</div>
               <TextField
                 margin="dense"
                 label="Group Description"
@@ -332,7 +332,7 @@ const Groups = () => {
                 value={newGroupDescription}
                 onChange={(e) => setNewGroupDescription(e.target.value)}
               />
-              <Typography color="error">{errors.description}</Typography>
+              <div style={{ color: "red" }}>{errors.description}</div>
               {/* userList maping here*/}
               <Box
                 sx={{
@@ -372,7 +372,7 @@ const Groups = () => {
                     );
                   })}
               </Box>
-              <Typography color="error">{errors.member}</Typography>
+              <div style={{ color: "red" }}>{errors.member}</div>
             </DialogContent>
             <DialogActions>
               <Button
